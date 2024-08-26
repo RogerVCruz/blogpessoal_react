@@ -1,78 +1,96 @@
-import { ChangeEvent, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Usuario from '../../models/Usuario'
-import { cadastrarUsuario } from '../../services/Service'
-import './Cadastro.css'
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import Usuario from "../../models/Usuario";
+import "./Cadastro.css";
+import { useNavigate } from "react-router-dom";
+import { cadastrarUsuario } from "../../services/Service";
+import { RotatingLines } from "react-loader-spinner";
 
 function Cadastro() {
+  // Hook useNavigate para redirecionar rotas
+  const navigate = useNavigate();
 
-  let navigate = useNavigate()
-
-  const [confirmaSenha, setConfirmaSenha] = useState<string>("")
-
+  // Estado que vai guardar os dados do meu usuário
   const [usuario, setUsuario] = useState<Usuario>({
     id: 0,
-    nome: '',
-    usuario: '',
-    senha: '',
-    foto: ''
-  })
+    nome: "",
+    usuario: "",
+    senha: "",
+    foto: "",
+  });
 
-  const [usuarioResposta, setUsuarioResposta] = useState<Usuario>({
-    id: 0,
-    nome: '',
-    usuario: '',
-    senha: '',
-    foto: ''
-  })
+  // Estado que vai guardar a confirmação da senha
+  const [confirmaSenha, setConfirmaSenha] = useState<string>("");
 
+  // Estado que vai indicar quando a animação (loader) será carregada
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // useEffect para monitorar o Estado usuario
   useEffect(() => {
-    if (usuarioResposta.id !== 0) {
-      back()
+    if (usuario.id !== 0) {
+      retornar();
     }
-  }, [usuarioResposta])
+  }, [usuario]);
 
-  function back() {
-    navigate('/login')
+  // Redireciona para o Componente Login (rota /login)
+  function retornar() {
+    navigate("/login");
   }
 
-  function handleConfirmarSenha(e: ChangeEvent<HTMLInputElement>) {
-    setConfirmaSenha(e.target.value)
-  }
-
+  // Função que atualiza as propriedades do Estado Usuário com os dados digitados no input
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     setUsuario({
       ...usuario,
-      [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
   }
 
-  async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
-    e.preventDefault()
+  // Função que atualiza o Estado confirmaSenha
+  function handleConfirmarSenha(e: ChangeEvent<HTMLInputElement>) {
+    setConfirmaSenha(e.target.value);
+  }
 
+  // Função para cadastrar um novo usuário
+  async function cadastrarNovoUsuario(e: FormEvent<HTMLFormElement>) {
+    // Impede o comportamento padrão do formulário
+    e.preventDefault();
+
+    // Valida a senha
     if (confirmaSenha === usuario.senha && usuario.senha.length >= 8) {
+      // Inicializa a animação
+      setIsLoading(true);
 
       try {
-        await cadastrarUsuario(`/usuarios/cadastrar`, usuario, setUsuarioResposta)
-        alert('Usuário cadastrado com sucesso')
-
+        // Executa a função de cadastro do usuário
+        await cadastrarUsuario(`/usuarios/cadastrar`, usuario, setUsuario);
+        alert("Usuário Cadastrado com Sucesso!");
       } catch (error) {
-        alert('Erro ao cadastrar o Usuário')
+        alert("Erro ao cadastrar o usuário!");
       }
-
     } else {
-      alert('Dados inconsistentes. Verifique as informações de cadastro.')
-      setUsuario({ ...usuario, senha: "" }) // Reinicia o campo de Senha
-      setConfirmaSenha("")                  // Reinicia o campo de Confirmar Senha
+      alert("Dados inconsistentes! Verifique as informações do Cadastro.");
+      setUsuario({ ...usuario, senha: "" });
+      setConfirmaSenha("");
     }
+
+    // Finaliza a animação
+    setIsLoading(false);
   }
+
+  console.log(usuario);
+  console.log(confirmaSenha);
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold">
+      <div
+        className="grid grid-cols-1 lg:grid-cols-2 h-screen 
+            place-items-center font-bold"
+      >
         <div className="fundoCadastro hidden lg:block"></div>
-        <form className='flex justify-center items-center flex-col w-2/3 gap-3' onSubmit={cadastrarNovoUsuario}>
-          <h2 className='text-slate-900 text-5xl'>Cadastrar</h2>
+        <form
+          onSubmit={cadastrarNovoUsuario}
+          className="flex justify-center items-center flex-col w-2/3 gap-3"
+        >
+          <h2 className="text-slate-900 text-5xl">Cadastrar</h2>
           <div className="flex flex-col w-full">
             <label htmlFor="nome">Nome</label>
             <input
@@ -81,8 +99,10 @@ function Cadastro() {
               name="nome"
               placeholder="Nome"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuario.nome} 
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+              value={usuario.nome}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                atualizarEstado(e)
+              }
             />
           </div>
           <div className="flex flex-col w-full">
@@ -93,8 +113,10 @@ function Cadastro() {
               name="usuario"
               placeholder="Usuario"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuario.usuario} 
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+              value={usuario.usuario}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                atualizarEstado(e)
+              }
             />
           </div>
           <div className="flex flex-col w-full">
@@ -105,8 +127,10 @@ function Cadastro() {
               name="foto"
               placeholder="Foto"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuario.foto} 
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+              value={usuario.foto}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                atualizarEstado(e)
+              }
             />
           </div>
           <div className="flex flex-col w-full">
@@ -117,8 +141,10 @@ function Cadastro() {
               name="senha"
               placeholder="Senha"
               className="border-2 border-slate-700 rounded p-2"
-              value={usuario.senha} 
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+              value={usuario.senha}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                atualizarEstado(e)
+              }
             />
           </div>
           <div className="flex flex-col w-full">
@@ -130,21 +156,41 @@ function Cadastro() {
               placeholder="Confirmar Senha"
               className="border-2 border-slate-700 rounded p-2"
               value={confirmaSenha}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => handleConfirmarSenha(e)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleConfirmarSenha(e)
+              }
             />
           </div>
           <div className="flex justify-around w-full gap-8">
-            <button className='rounded text-white bg-red-400 hover:bg-red-700 w-1/2 py-2' onClick={back}>
+            <button
+              className="rounded text-white bg-red-400 
+                  hover:bg-red-700 w-1/2 py-2"
+            >
               Cancelar
             </button>
-            <button className='rounded text-white bg-indigo-400 hover:bg-indigo-900 w-1/2 py-2' type='submit'>
-              Cadastrar
+            <button
+              type="submit"
+              className="rounded text-white bg-indigo-400 
+                           hover:bg-indigo-900 w-1/2 py-2
+                           flex justify-center"
+            >
+              {isLoading ? (
+                <RotatingLines
+                  strokeColor="white"
+                  strokeWidth="5"
+                  animationDuration="0.75"
+                  width="24"
+                  visible={true}
+                />
+              ) : (
+                <span>Cadastrar</span>
+              )}
             </button>
           </div>
         </form>
       </div>
     </>
-  )
+  );
 }
 
-export default Cadastro
+export default Cadastro;
