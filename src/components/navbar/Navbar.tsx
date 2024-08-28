@@ -28,6 +28,9 @@ function Navbar() {
             <Link to="/temas" className="hover:underline">
               Temas
             </Link>
+            <Link to="/cadastroTema" className="hover:underline">
+              Cadastrar tema
+            </Link>
             <div className="hover:underline">Cadastrar tema</div>
             <div className="hover:underline">Perfil</div>
             <Link to="" onClick={logout} className="hover:underline">
