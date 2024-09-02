@@ -44,7 +44,7 @@ function Login() {
           onSubmit={login}
         >
           <h2 className="text-slate-900 text-5xl ">Entrar</h2>
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full mt-10">
             <label htmlFor="usuario">Usuário</label>
             <input
               type="text"
