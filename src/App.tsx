@@ -1,16 +1,16 @@
 import "./App.css";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Cadastro from "./pages/cadastro/Cadastro";
 import Home from "./pages/home/Home";
+import { AuthProvider } from "./contexts/AuthContext";
 import ListaTemas from "./components/temas/listaTemas/ListaTemas";
-
-import FormularioTema from "./components/temas/formularioTemas/FormularioTemas";
 import DeletarTema from "./components/temas/deletarTema/DeletarTema";
+import FormularioTema from "./components/temas/formularioTemas/FormularioTemas";
+import ListaPostagens from "./components/postagens/listaPostagens/ListaPostagens";
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function App() {
               <Route path="/cadastroTema" element={<FormularioTema />} />
               <Route path="/editarTema/:id" element={<FormularioTema />} />
               <Route path="/deletarTema/:id" element={<DeletarTema />} />
+              <Route path="/postagens" element={<ListaPostagens />} />
             </Routes>
           </div>
           <Footer />
