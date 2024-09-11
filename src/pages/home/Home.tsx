@@ -49,20 +49,7 @@ function Home() {
                         justify-around
                         gap-4
                     "
-          >
-            <div
-              className="
-                            rounded
-                            border-white
-                            border-solid
-                            border-2
-                            py-2
-                            px-4
-                        "
-            >
-              Nova Postagem
-            </div>
-          </div>
+          ></div>
         </div>
         <div
           className="
